@@ -1,4 +1,4 @@
-OmniCalc - Universal Calculator
+### OmniCalc - Universal Calculator
 
 
 An all-in-one calculator for basic, scientific, programmer, financial, unit conversion, date/time, and graphing calculations.
