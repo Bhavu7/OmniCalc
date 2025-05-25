@@ -1,0 +1,1453 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OmniCalc - Universal Calculator</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+  </head>
+  <body
+    class="min-h-screen flex items-center justify-center p-4 theme-transition scroll-smooth"
+  >
+    <div class="w-full max-w-6xl">
+      <!-- Header -->
+      <header class="flex justify-between items-center mb-8">
+        <h1 class="text-4xl font-bold gradient-text">OmniCalc</h1>
+        <div class="flex items-center space-x-3">
+          <button title="Button" id="themeToggle" class="hidden">
+            <!-- <i class="fas fa-moon dark:hidden"></i>
+            <i class="fas fa-sun hidden dark:inline"></i> -->
+          </button>
+          <button
+            title="Button"
+            id="helpBtn"
+            class="p-3 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 text-white neumorphic-btn transition-all hover:scale-105"
+          >
+            <i class="fas fa-question"></i>
+          </button>
+        </div>
+      </header>
+
+      <!-- Main Calculator Area -->
+      <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <!-- Left Sidebar - Calculator Modes -->
+        <div class="lg:col-span-1">
+          <div class="glass-card rounded-2xl p-5 h-full neumorphic">
+            <h2
+              class="text-xl font-semibold mb-5 text-gray-800 dark:text-white"
+            >
+              Calculator Modes
+            </h2>
+            <ul class="space-y-3">
+              <li>
+                <button
+                  data-mode="basic"
+                  class="mode-btn w-full text-left px-5 py-3 rounded-xl mode-active font-medium transition-all hover:scale-[1.02]"
+                >
+                  <i class="fas fa-calculator mr-3"></i> Basic
+                </button>
+              </li>
+              <li>
+                <button
+                  data-mode="scientific"
+                  class="mode-btn w-full text-left px-5 py-3 rounded-xl mode-inactive transition-all hover:scale-[1.02]"
+                >
+                  <i class="fas fa-flask mr-3"></i> Scientific
+                </button>
+              </li>
+              <li>
+                <button
+                  data-mode="programmer"
+                  class="mode-btn w-full text-left px-5 py-3 rounded-xl mode-inactive transition-all hover:scale-[1.02]"
+                >
+                  <i class="fas fa-code mr-3"></i> Programmer
+                </button>
+              </li>
+              <li>
+                <button
+                  data-mode="financial"
+                  class="mode-btn w-full text-left px-5 py-3 rounded-xl mode-inactive transition-all hover:scale-[1.02]"
+                >
+                  <i class="fas fa-coins mr-3"></i> Financial
+                </button>
+              </li>
+              <li>
+                <button
+                  data-mode="unit"
+                  class="mode-btn w-full text-left px-5 py-3 rounded-xl mode-inactive transition-all hover:scale-[1.02]"
+                >
+                  <i class="fas fa-ruler-combined mr-3"></i> Unit Converter
+                </button>
+              </li>
+              <li>
+                <button
+                  data-mode="date"
+                  class="mode-btn w-full text-left px-5 py-3 rounded-xl mode-inactive transition-all hover:scale-[1.02]"
+                >
+                  <i class="fas fa-calendar-alt mr-3"></i> Date/Time
+                </button>
+              </li>
+              <li>
+                <button
+                  data-mode="graph"
+                  class="mode-btn w-full text-left px-5 py-3 rounded-xl mode-inactive transition-all hover:scale-[1.02]"
+                >
+                  <i class="fas fa-chart-line mr-3"></i> Graphing
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Main Content - Calculator Display and Keypad -->
+        <div class="lg:col-span-3">
+          <div class="glass-card rounded-2xl overflow-hidden neumorphic">
+            <!-- Display Area -->
+            <div
+              class="p-5 bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20"
+            >
+              <div
+                id="historyDisplay"
+                class="text-right text-gray-500 dark:text-gray-400 text-sm h-6 overflow-x-auto whitespace-nowrap scrollbar-thin"
+              ></div>
+              <div
+                id="mainDisplay"
+                class="text-right text-4xl font-bold text-gray-800 dark:text-white py-3 h-14 overflow-x-auto whitespace-nowrap scrollbar-thin"
+              >
+                0
+              </div>
+            </div>
+
+            <!-- Mode-specific controls will be injected here -->
+            <div
+              id="modeControls"
+              class="p-4 border-b border-gray-200/50 dark:border-gray-700/50"
+            ></div>
+
+            <!-- Keypad - Basic mode is default -->
+            <div id="basicKeypad" class="grid grid-cols-4 gap-3 p-5">
+              <!-- Row 1 -->
+              <button
+                class="btn-secondary py-4 rounded-xl neumorphic-btn"
+                data-value="C"
+              >
+                C
+              </button>
+              <button
+                class="btn-secondary py-4 rounded-xl neumorphic-btn"
+                data-value="±"
+              >
+                ±
+              </button>
+              <button
+                class="btn-secondary py-4 rounded-xl neumorphic-btn"
+                data-value="%"
+              >
+                %
+              </button>
+              <button
+                class="btn-primary py-4 rounded-xl neumorphic-btn"
+                data-value="/"
+              >
+                ÷
+              </button>
+
+              <!-- Row 2 -->
+              <button
+                class="btn-number py-4 rounded-xl neumorphic-btn"
+                data-value="7"
+              >
+                7
+              </button>
+              <button
+                class="btn-number py-4 rounded-xl neumorphic-btn"
+                data-value="8"
+              >
+                8
+              </button>
+              <button
+                class="btn-number py-4 rounded-xl neumorphic-btn"
+                data-value="9"
+              >
+                9
+              </button>
+              <button
+                class="btn-primary py-4 rounded-xl neumorphic-btn"
+                data-value="*"
+              >
+                ×
+              </button>
+
+              <!-- Row 3 -->
+              <button
+                class="btn-number py-4 rounded-xl neumorphic-btn"
+                data-value="4"
+              >
+                4
+              </button>
+              <button
+                class="btn-number py-4 rounded-xl neumorphic-btn"
+                data-value="5"
+              >
+                5
+              </button>
+              <button
+                class="btn-number py-4 rounded-xl neumorphic-btn"
+                data-value="6"
+              >
+                6
+              </button>
+              <button
+                class="btn-primary py-4 rounded-xl neumorphic-btn"
+                data-value="-"
+              >
+                -
+              </button>
+
+              <!-- Row 4 -->
+              <button
+                class="btn-number py-4 rounded-xl neumorphic-btn"
+                data-value="1"
+              >
+                1
+              </button>
+              <button
+                class="btn-number py-4 rounded-xl neumorphic-btn"
+                data-value="2"
+              >
+                2
+              </button>
+              <button
+                class="btn-number py-4 rounded-xl neumorphic-btn"
+                data-value="3"
+              >
+                3
+              </button>
+              <button
+                class="btn-primary py-4 rounded-xl neumorphic-btn"
+                data-value="+"
+              >
+                +
+              </button>
+
+              <!-- Row 5 -->
+              <button
+                class="btn-number py-4 rounded-xl neumorphic-btn col-span-2"
+                data-value="0"
+              >
+                0
+              </button>
+              <button
+                class="btn-number py-4 rounded-xl neumorphic-btn"
+                data-value="."
+              >
+                .
+              </button>
+              <button
+                class="btn-equal py-4 rounded-xl neumorphic-btn"
+                data-value="="
+              >
+                =
+              </button>
+            </div>
+
+            <!-- Scientific keypad (hidden by default) -->
+            <div
+              id="scientificKeypad"
+              class="grid grid-cols-5 gap-3 p-5 hidden"
+            >
+              <!-- Row 1 -->
+              <button
+                class="btn-secondary py-3 rounded-xl neumorphic-btn"
+                data-value="sin"
+              >
+                sin
+              </button>
+              <button
+                class="btn-secondary py-3 rounded-xl neumorphic-btn"
+                data-value="cos"
+              >
+                cos
+              </button>
+              <button
+                class="btn-secondary py-3 rounded-xl neumorphic-btn"
+                data-value="tan"
+              >
+                tan
+              </button>
+              <button
+                class="btn-secondary py-3 rounded-xl neumorphic-btn"
+                data-value="log"
+              >
+                log
+              </button>
+              <button
+                class="btn-secondary py-3 rounded-xl neumorphic-btn"
+                data-value="ln"
+              >
+                ln
+              </button>
+
+              <!-- Row 2 -->
+              <button
+                class="btn-secondary py-3 rounded-xl neumorphic-btn"
+                data-value="sin⁻¹"
+              >
+                sin⁻¹
+              </button>
+              <button
+                class="btn-secondary py-3 rounded-xl neumorphic-btn"
+                data-value="cos⁻¹"
+              >
+                cos⁻¹
+              </button>
+              <button
+                class="btn-secondary py-3 rounded-xl neumorphic-btn"
+                data-value="tan⁻¹"
+              >
+                tan⁻¹
+              </button>
+              <button
+                class="btn-secondary py-3 rounded-xl neumorphic-btn"
+                data-value="10^x"
+              >
+                10^x
+              </button>
+              <button
+                class="btn-secondary py-3 rounded-xl neumorphic-btn"
+                data-value="e^x"
+              >
+                e^x
+              </button>
+
+              <!-- Row 3 -->
+              <button
+                class="btn-secondary py-3 rounded-xl neumorphic-btn"
+                data-value="("
+              >
+                (
+              </button>
+              <button
+                class="btn-secondary py-3 rounded-xl neumorphic-btn"
+                data-value=")"
+              >
+                )
+              </button>
+              <button
+                class="btn-secondary py-3 rounded-xl neumorphic-btn"
+                data-value="x^y"
+              >
+                x^y
+              </button>
+              <button
+                class="btn-secondary py-3 rounded-xl neumorphic-btn"
+                data-value="√"
+              >
+                √
+              </button>
+              <button
+                class="btn-secondary py-3 rounded-xl neumorphic-btn"
+                data-value="∛"
+              >
+                ∛
+              </button>
+
+              <!-- Row 4 -->
+              <button
+                class="btn-secondary py-3 rounded-xl neumorphic-btn"
+                data-value="π"
+              >
+                π
+              </button>
+              <button
+                class="btn-secondary py-3 rounded-xl neumorphic-btn"
+                data-value="e"
+              >
+                e
+              </button>
+              <button
+                class="btn-secondary py-3 rounded-xl neumorphic-btn"
+                data-value="x!"
+              >
+                x!
+              </button>
+              <button
+                class="btn-secondary py-3 rounded-xl neumorphic-btn"
+                data-value="mod"
+              >
+                mod
+              </button>
+              <button
+                class="btn-secondary py-3 rounded-xl neumorphic-btn"
+                data-value="Rand"
+              >
+                Rand
+              </button>
+
+              <!-- Row 5 - Memory functions -->
+              <button
+                class="btn-secondary py-3 rounded-xl neumorphic-btn"
+                data-value="MC"
+              >
+                MC
+              </button>
+              <button
+                class="btn-secondary py-3 rounded-xl neumorphic-btn"
+                data-value="MR"
+              >
+                MR
+              </button>
+              <button
+                class="btn-secondary py-3 rounded-xl neumorphic-btn"
+                data-value="M+"
+              >
+                M+
+              </button>
+              <button
+                class="btn-secondary py-3 rounded-xl neumorphic-btn"
+                data-value="M-"
+              >
+                M-
+              </button>
+              <button
+                class="btn-secondary py-3 rounded-xl neumorphic-btn"
+                data-value="MS"
+              >
+                MS
+              </button>
+            </div>
+
+            <!-- Programmer keypad (hidden by default) -->
+            <div
+              id="programmerKeypad"
+              class="grid grid-cols-5 gap-3 p-5 hidden"
+            >
+              <!-- Base selection -->
+              <div class="col-span-5 flex justify-between mb-3">
+                <button
+                  class="btn-base active px-4 py-2 rounded-lg bg-indigo-500 text-white"
+                  data-base="HEX"
+                >
+                  HEX
+                </button>
+                <button
+                  class="btn-base px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700"
+                  data-base="DEC"
+                >
+                  DEC
+                </button>
+                <button
+                  class="btn-base px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700"
+                  data-base="OCT"
+                >
+                  OCT
+                </button>
+                <button
+                  class="btn-base px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700"
+                  data-base="BIN"
+                >
+                  BIN
+                </button>
+              </div>
+
+              <!-- Row 1 -->
+              <button
+                class="btn-secondary py-2 rounded-xl neumorphic-btn"
+                data-value="A"
+              >
+                A
+              </button>
+              <button
+                class="btn-secondary py-2 rounded-xl neumorphic-btn"
+                data-value="B"
+              >
+                B
+              </button>
+              <button
+                class="btn-secondary py-2 rounded-xl neumorphic-btn"
+                data-value="C"
+              >
+                C
+              </button>
+              <button
+                class="btn-secondary py-2 rounded-xl neumorphic-btn"
+                data-value="D"
+              >
+                D
+              </button>
+              <button
+                class="btn-secondary py-2 rounded-xl neumorphic-btn"
+                data-value="AND"
+              >
+                AND
+              </button>
+
+              <!-- Row 2 -->
+              <button
+                class="btn-secondary py-2 rounded-xl neumorphic-btn"
+                data-value="E"
+              >
+                E
+              </button>
+              <button
+                class="btn-secondary py-2 rounded-xl neumorphic-btn"
+                data-value="F"
+              >
+                F
+              </button>
+              <button
+                class="btn-secondary py-2 rounded-xl neumorphic-btn"
+                data-value="NOT"
+              >
+                NOT
+              </button>
+              <button
+                class="btn-secondary py-2 rounded-xl neumorphic-btn"
+                data-value="OR"
+              >
+                OR
+              </button>
+              <button
+                class="btn-secondary py-2 rounded-xl neumorphic-btn"
+                data-value="NAND"
+              >
+                NAND
+              </button>
+
+              <!-- Row 3 -->
+              <button
+                class="btn-secondary py-2 rounded-xl neumorphic-btn"
+                data-value="7"
+              >
+                7
+              </button>
+              <button
+                class="btn-secondary py-2 rounded-xl neumorphic-btn"
+                data-value="8"
+              >
+                8
+              </button>
+              <button
+                class="btn-secondary py-2 rounded-xl neumorphic-btn"
+                data-value="9"
+              >
+                9
+              </button>
+              <button
+                class="btn-secondary py-2 rounded-xl neumorphic-btn"
+                data-value="XOR"
+              >
+                XOR
+              </button>
+              <button
+                class="btn-secondary py-2 rounded-xl neumorphic-btn"
+                data-value="NOR"
+              >
+                NOR
+              </button>
+
+              <!-- Row 4 -->
+              <button
+                class="btn-secondary py-2 rounded-xl neumorphic-btn"
+                data-value="4"
+              >
+                4
+              </button>
+              <button
+                class="btn-secondary py-2 rounded-xl neumorphic-btn"
+                data-value="5"
+              >
+                5
+              </button>
+              <button
+                class="btn-secondary py-2 rounded-xl neumorphic-btn"
+                data-value="6"
+              >
+                6
+              </button>
+              <button
+                class="btn-secondary py-2 rounded-xl neumorphic-btn"
+                data-value="<<"
+              >
+                <<
+              </button>
+              <button
+                class="btn-secondary py-2 rounded-xl neumorphic-btn"
+                data-value=">>"
+              >
+                >>
+              </button>
+
+              <!-- Row 5 -->
+              <button
+                class="btn-secondary py-2 rounded-xl neumorphic-btn"
+                data-value="1"
+              >
+                1
+              </button>
+              <button
+                class="btn-secondary py-2 rounded-xl neumorphic-btn"
+                data-value="2"
+              >
+                2
+              </button>
+              <button
+                class="btn-secondary py-2 rounded-xl neumorphic-btn"
+                data-value="3"
+              >
+                3
+              </button>
+              <button
+                class="btn-secondary py-2 rounded-xl neumorphic-btn"
+                data-value="~"
+              >
+                ~
+              </button>
+              <button
+                class="btn-secondary py-2 rounded-xl neumorphic-btn"
+                data-value="^"
+              >
+                ^
+              </button>
+
+              <!-- Row 6 -->
+              <button
+                class="btn-secondary py-2 rounded-xl neumorphic-btn col-span-2"
+                data-value="0"
+              >
+                0
+              </button>
+              <button
+                class="btn-secondary py-2 rounded-xl neumorphic-btn"
+                data-value="."
+              >
+                .
+              </button>
+              <button
+                class="btn-equal py-2 rounded-xl neumorphic-btn col-span-2"
+                data-value="="
+              >
+                =
+              </button>
+            </div>
+
+            <!-- Financial Calculator (hidden by default) -->
+            <div
+              id="financialCalculator"
+              class="grid grid-cols-1 md:grid-cols-2 gap-6 p-5 hidden"
+            >
+              <!-- Loan Calculator -->
+              <div class="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-xl">
+                <h4 class="font-medium text-gray-800 dark:text-white mb-3">
+                  Loan Calculator
+                </h4>
+                <div class="space-y-3">
+                  <div>
+                    <label
+                      for="loanAmount"
+                      class="block text-sm text-gray-600 dark:text-gray-300 mb-1"
+                      >Loan Amount (₹)</label
+                    >
+                    <input
+                      type="number"
+                      id="loanAmount"
+                      class="w-full px-3 py-2 border border-gray-300/50 dark:border-gray-600/50 rounded-lg dark:bg-gray-800/50 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      for="interestRate"
+                      class="block text-sm text-gray-600 dark:text-gray-300 mb-1"
+                      >Interest Rate (%)</label
+                    >
+                    <input
+                      type="number"
+                      id="interestRate"
+                      class="w-full px-3 py-2 border border-gray-300/50 dark:border-gray-600/50 rounded-lg dark:bg-gray-800/50 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      for="loanTerm"
+                      class="block text-sm text-gray-600 dark:text-gray-300 mb-1"
+                      >Loan Term (years)</label
+                    >
+                    <input
+                      type="number"
+                      id="loanTerm"
+                      class="w-full px-3 py-2 border border-gray-300/50 dark:border-gray-600/50 rounded-lg dark:bg-gray-800/50 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    />
+                  </div>
+                  <button
+                    id="calculateLoan"
+                    class="w-full bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white py-2 rounded-lg transition-all"
+                  >
+                    Calculate
+                  </button>
+                  <div
+                    id="loanResult"
+                    class="mt-2 p-3 bg-blue-50/50 dark:bg-blue-900/50 rounded-lg hidden"
+                  >
+                    <p class="text-sm text-gray-800 dark:text-white">
+                      Monthly Payment:
+                      <span id="monthlyPayment" class="font-semibold"></span>
+                    </p>
+                    <p class="text-sm text-gray-800 dark:text-white">
+                      Total Interest:
+                      <span id="totalInterest" class="font-semibold"></span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Investment Calculator -->
+              <div class="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-xl">
+                <h4 class="font-medium text-gray-800 dark:text-white mb-3">
+                  Investment Calculator
+                </h4>
+                <div class="space-y-3">
+                  <div>
+                    <label
+                      for="initialInvestment"
+                      class="block text-sm text-gray-600 dark:text-gray-300 mb-1"
+                      >Initial Investment (₹)</label
+                    >
+                    <input
+                      type="number"
+                      id="initialInvestment"
+                      class="w-full px-3 py-2 border border-gray-300/50 dark:border-gray-600/50 rounded-lg dark:bg-gray-800/50 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      for="monthlyContribution"
+                      class="block text-sm text-gray-600 dark:text-gray-300 mb-1"
+                      >Monthly Contribution (₹)</label
+                    >
+                    <input
+                      type="number"
+                      id="monthlyContribution"
+                      class="w-full px-3 py-2 border border-gray-300/50 dark:border-gray-600/50 rounded-lg dark:bg-gray-800/50 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      for="annualReturn"
+                      class="block text-sm text-gray-600 dark:text-gray-300 mb-1"
+                      >Annual Return (%)</label
+                    >
+                    <input
+                      type="number"
+                      id="annualReturn"
+                      class="w-full px-3 py-2 border border-gray-300/50 dark:border-gray-600/50 rounded-lg dark:bg-gray-800/50 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      for="investmentYears"
+                      class="block text-sm text-gray-600 dark:text-gray-300 mb-1"
+                      >Years</label
+                    >
+                    <input
+                      type="number"
+                      id="investmentYears"
+                      class="w-full px-3 py-2 border border-gray-300/50 dark:border-gray-600/50 rounded-lg dark:bg-gray-800/50 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    />
+                  </div>
+                  <button
+                    id="calculateInvestment"
+                    class="w-full bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white py-2 rounded-lg transition-all"
+                  >
+                    Calculate
+                  </button>
+                  <div
+                    id="investmentResult"
+                    class="mt-2 p-3 bg-blue-50/50 dark:bg-blue-900/50 rounded-lg hidden"
+                  >
+                    <p class="text-sm text-gray-800 dark:text-white">
+                      Future Value:
+                      <span id="futureValue" class="font-semibold"></span>
+                    </p>
+                    <p class="text-sm text-gray-800 dark:text-white">
+                      Total Contributions:
+                      <span
+                        id="totalContributions"
+                        class="font-semibold"
+                      ></span>
+                    </p>
+                    <p class="text-sm text-gray-800 dark:text-white">
+                      Interest Earned:
+                      <span id="interestEarned" class="font-semibold"></span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Unit Converter (hidden by default) -->
+            <div id="unitConverter" class="p-5 hidden">
+              <div class="space-y-4">
+                <div>
+                  <label
+                    for="unitCategory"
+                    class="block text-sm text-gray-600 dark:text-gray-300 mb-1"
+                    >Category</label
+                  >
+                  <select
+                    id="unitCategory"
+                    class="w-full px-3 py-2 border border-gray-300/50 dark:border-gray-600/50 rounded-lg dark:bg-gray-800/50 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  >
+                    <option value="length">Length</option>
+                    <option value="weight">Weight</option>
+                    <option value="volume">Volume</option>
+                    <option value="temperature">Temperature</option>
+                    <option value="speed">Speed</option>
+                    <option value="time">Time</option>
+                    <option value="data">Data</option>
+                  </select>
+                </div>
+
+                <div class="grid grid-cols-3 gap-2">
+                  <div>
+                    <label
+                      for="unitFrom"
+                      class="block text-sm text-gray-600 dark:text-gray-300 mb-1"
+                      >From</label
+                    >
+                    <select
+                      id="unitFrom"
+                      class="w-full px-3 py-2 border border-gray-300/50 dark:border-gray-600/50 rounded-lg dark:bg-gray-800/50 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    >
+                      <!-- Options will be populated by JavaScript -->
+                    </select>
+                  </div>
+                  <div class="flex items-end">
+                    <button
+                      title="Swap Units"
+                      id="swapUnits"
+                      class="w-full py-2 bg-gray-200 dark:bg-gray-700 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-all"
+                    >
+                      <i class="fas fa-exchange-alt"></i>
+                    </button>
+                  </div>
+                  <div>
+                    <label
+                      for="unitTo"
+                      class="block text-sm text-gray-600 dark:text-gray-300 mb-1"
+                      >To</label
+                    >
+                    <select
+                      id="unitTo"
+                      class="w-full px-3 py-2 border border-gray-300/50 dark:border-gray-600/50 rounded-lg dark:bg-gray-800/50 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    >
+                      <!-- Options will be populated by JavaScript -->
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <label
+                    for="unitValue"
+                    class="block text-sm text-gray-600 dark:text-gray-300 mb-1"
+                    >Value</label
+                  >
+                  <input
+                    type="number"
+                    id="unitValue"
+                    class="w-full px-3 py-2 border border-gray-300/50 dark:border-gray-600/50 rounded-lg dark:bg-gray-800/50 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  />
+                </div>
+
+                <button
+                  id="convertUnit"
+                  class="w-full bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white py-2 rounded-lg transition-all"
+                >
+                  Convert
+                </button>
+
+                <div
+                  id="unitResult"
+                  class="mt-2 p-3 bg-blue-50/50 dark:bg-blue-900/50 rounded-lg hidden"
+                >
+                  <p
+                    class="text-lg font-semibold text-center text-gray-800 dark:text-white"
+                  >
+                    <span id="convertedValue"></span>
+                    <span id="convertedUnit" class="text-sm"></span>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Date Calculator (hidden by default) -->
+            <div id="dateCalculator" class="p-5 hidden">
+              <div class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label
+                      for="startDate"
+                      class="block text-sm text-gray-600 dark:text-gray-300 mb-1"
+                      >Start Date</label
+                    >
+                    <input
+                      type="date"
+                      id="startDate"
+                      class="w-full px-3 py-2 border border-gray-300/50 dark:border-gray-600/50 rounded-lg dark:bg-gray-800/50 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      for="endDate"
+                      class="block text-sm text-gray-600 dark:text-gray-300 mb-1"
+                      >End Date</label
+                    >
+                    <input
+                      type="date"
+                      id="endDate"
+                      class="w-full px-3 py-2 border border-gray-300/50 dark:border-gray-600/50 rounded-lg dark:bg-gray-800/50 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    />
+                  </div>
+                </div>
+
+                <button
+                  id="calculateDateDiff"
+                  class="w-full bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white py-2 rounded-lg transition-all"
+                >
+                  Calculate Difference
+                </button>
+
+                <div
+                  id="dateDiffResult"
+                  class="mt-2 p-3 bg-blue-50/50 dark:bg-blue-900/50 rounded-lg hidden"
+                >
+                  <p class="text-sm text-gray-800 dark:text-white">
+                    Days between:
+                    <span id="daysBetween" class="font-semibold"></span>
+                  </p>
+                  <p class="text-sm text-gray-800 dark:text-white">
+                    Weeks between:
+                    <span id="weeksBetween" class="font-semibold"></span>
+                  </p>
+                  <p class="text-sm text-gray-800 dark:text-white">
+                    Months between:
+                    <span id="monthsBetween" class="font-semibold"></span>
+                  </p>
+                  <p class="text-sm text-gray-800 dark:text-white">
+                    Years between:
+                    <span id="yearsBetween" class="font-semibold"></span>
+                  </p>
+                </div>
+
+                <div
+                  class="border-t border-gray-200/50 dark:border-gray-700/50 pt-4"
+                >
+                  <h4 class="font-medium text-gray-800 dark:text-white mb-3">
+                    Add/Subtract Time
+                  </h4>
+                  <div class="grid grid-cols-3 gap-2">
+                    <div>
+                      <label
+                        for="baseDate"
+                        class="block text-sm text-gray-600 dark:text-gray-300 mb-1"
+                        >Date</label
+                      >
+                      <input
+                        type="date"
+                        id="baseDate"
+                        class="w-full px-3 py-2 border border-gray-300/50 dark:border-gray-600/50 rounded-lg dark:bg-gray-800/50 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                      />
+                    </div>
+                    <div>
+                      <label
+                        for="dateOperation"
+                        class="block text-sm text-gray-600 dark:text-gray-300 mb-1"
+                        >Operation</label
+                      >
+                      <select
+                        id="dateOperation"
+                        class="w-full px-3 py-2 border border-gray-300/50 dark:border-gray-600/50 rounded-lg dark:bg-gray-800/50 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                      >
+                        <option value="add">Add</option>
+                        <option value="subtract">Subtract</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label
+                        for="dateValue"
+                        class="block text-sm text-gray-600 dark:text-gray-300 mb-1"
+                        >Value</label
+                      >
+                      <input
+                        type="number"
+                        id="dateValue"
+                        class="w-full px-3 py-2 border border-gray-300/50 dark:border-gray-600/50 rounded-lg dark:bg-gray-800/50 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                      />
+                    </div>
+                  </div>
+                  <div class="grid grid-cols-2 gap-2 mt-2">
+                    <div>
+                      <label
+                        for="dateUnit"
+                        class="block text-sm text-gray-600 dark:text-gray-300 mb-1"
+                        >Unit</label
+                      >
+                      <select
+                        id="dateUnit"
+                        class="w-full px-3 py-2 border border-gray-300/50 dark:border-gray-600/50 rounded-lg dark:bg-gray-800/50 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                      >
+                        <option value="days">Days</option>
+                        <option value="weeks">Weeks</option>
+                        <option value="months">Months</option>
+                        <option value="years">Years</option>
+                      </select>
+                    </div>
+                    <div class="flex items-end">
+                      <button
+                        id="calculateDateOperation"
+                        class="w-full bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white py-2 rounded-lg transition-all"
+                      >
+                        Calculate
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  id="dateOpResult"
+                  class="mt-2 p-3 bg-blue-50/50 dark:bg-blue-900/50 rounded-lg hidden"
+                >
+                  <p
+                    class="text-lg font-semibold text-center text-gray-800 dark:text-white"
+                  >
+                    <span id="resultDate"></span>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Graphing Calculator (hidden by default) -->
+            <div id="graphingCalculator" class="p-5 hidden">
+              <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="lg:col-span-2">
+                  <div class="bg-gray-100 dark:bg-gray-700/50 rounded-xl p-4">
+                    <canvas
+                      id="graphCanvas"
+                      width="600"
+                      height="400"
+                      class="w-full h-full"
+                    ></canvas>
+                  </div>
+                  <div class="flex justify-between mt-3">
+                    <button
+                      id="zoomIn"
+                      class="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-all"
+                    >
+                      <i class="fas fa-search-plus mr-2"></i>Zoom In
+                    </button>
+                    <button
+                      id="zoomOut"
+                      class="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-all"
+                    >
+                      <i class="fas fa-search-minus mr-2"></i>Zoom Out
+                    </button>
+                    <button
+                      id="panLeft"
+                      class="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-all"
+                    >
+                      <i class="fas fa-arrow-left mr-2"></i>Left
+                    </button>
+                    <button
+                      id="panRight"
+                      class="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-all"
+                    >
+                      <i class="fas fa-arrow-right mr-2"></i>Right
+                    </button>
+                    <button
+                      id="resetGraph"
+                      class="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-all"
+                    >
+                      <i class="fas fa-sync-alt mr-2"></i>Reset
+                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  <div class="space-y-3">
+                    <div>
+                      <label
+                        for="function1"
+                        class="block text-sm text-gray-600 dark:text-gray-300 mb-1"
+                        >Function 1</label
+                      >
+                      <input
+                        type="text"
+                        id="function1"
+                        value="sin(x)"
+                        class="w-full px-3 py-2 border border-gray-300/50 dark:border-gray-600/50 rounded-lg dark:bg-gray-800/50 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                      />
+                    </div>
+                    <div>
+                      <label
+                        for="function2"
+                        class="block text-sm text-gray-600 dark:text-gray-300 mb-1"
+                        >Function 2</label
+                      >
+                      <input
+                        type="text"
+                        id="function2"
+                        value=""
+                        class="w-full px-3 py-2 border border-gray-300/50 dark:border-gray-600/50 rounded-lg dark:bg-gray-800/50 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                      />
+                    </div>
+                    <div>
+                      <label
+                        for="function3"
+                        class="block text-sm text-gray-600 dark:text-gray-300 mb-1"
+                        >Function 3</label
+                      >
+                      <input
+                        type="text"
+                        id="function3"
+                        value=""
+                        class="w-full px-3 py-2 border border-gray-300/50 dark:border-gray-600/50 rounded-lg dark:bg-gray-800/50 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                      />
+                    </div>
+                    <button
+                      id="plotGraph"
+                      class="w-full bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white py-2 rounded-lg transition-all"
+                    >
+                      Plot Graph
+                    </button>
+                  </div>
+
+                  <div class="mt-8">
+                    <h4 class="font-medium text-gray-800 dark:text-white mb-2">
+                      Examples
+                    </h4>
+                    <ul
+                      class="space-y-2 text-sm text-gray-700 dark:text-gray-300"
+                    >
+                      <!-- <li>
+                        <span
+                          class="font-mono bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded"
+                          >sin(x)</span
+                        >
+                        - Sine function
+                      </li>
+                      <li>
+                        <span
+                          class="font-mono bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded"
+                          >cos(x)</span
+                        >
+                        - Cosine function
+                      </li>
+                      <li>
+                        <span
+                          class="font-mono bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded"
+                          >tan(x)</span
+                        >
+                        - Tangent function
+                      </li> -->
+                      <li>
+                        <span
+                          class="font-mono bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded"
+                          >x^2</span
+                        >
+                        - Quadratic function
+                      </li>
+                      <li>
+                        <span
+                          class="font-mono bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded"
+                          >sqrt(x)</span
+                        >
+                        - Square root
+                      </li>
+                      <!-- <li>
+                        <span
+                          class="font-mono bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded"
+                          >log(x)</span
+                        >
+                        - Logarithm
+                      </li> -->
+                      <li>
+                        <span
+                          class="font-mono bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded"
+                          >abs(x)</span
+                        >
+                        - Absolute value
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- History Panel -->
+          <div
+            id="historyPanel"
+            class="glass-card rounded-2xl mt-6 p-5 neumorphic hidden"
+          >
+            <div class="flex justify-between items-center mb-4">
+              <h3 class="text-lg font-semibold text-gray-800 dark:text-white">
+                Calculation History
+              </h3>
+              <button
+                id="clearHistory"
+                class="text-sm text-red-500 hover:text-red-700 dark:hover:text-red-400"
+              >
+                Clear All
+              </button>
+            </div>
+            <ul
+              id="historyList"
+              class="space-y-3 max-h-64 overflow-y-auto scrollbar-thin"
+            >
+              <!-- History items will be added here dynamically -->
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Help Modal -->
+      <div
+        id="helpModal"
+        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden p-4"
+      >
+        <div
+          class="help-modal bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 w-full max-w-2xl overflow-y-auto glass-card"
+        >
+          <div
+            class="flex justify-between items-center mb-4 sticky top-0 z-10 bg-white dark:bg-gray-800"
+          >
+            <h3 class="text-xl font-semibold text-gray-800 dark:text-white">
+              Help & Instructions
+            </h3>
+            <button
+              title="Close Help"
+              id="closeHelpModal"
+              class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
+            >
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+
+          <div class="space-y-5">
+            <div>
+              <h4 class="font-medium text-gray-800 dark:text-white mb-2">
+                Basic Calculator
+              </h4>
+              <ul
+                class="list-disc pl-5 text-sm text-gray-700 dark:text-gray-300 space-y-1"
+              >
+                <li>Use the number buttons or keyboard to enter values</li>
+                <li>Press = to calculate the result</li>
+                <li>C clears the current input, AC clears everything</li>
+                <li>± toggles positive/negative</li>
+                <li>% calculates percentages</li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 class="font-medium text-gray-800 dark:text-white mb-2">
+                Scientific Calculator
+              </h4>
+              <ul
+                class="list-disc pl-5 text-sm text-gray-700 dark:text-gray-300 space-y-1"
+              >
+                <li>
+                  Trigonometric functions use the current angle mode (DEG/RAD)
+                </li>
+                <li>Use ( ) for complex expressions</li>
+                <li>x^y raises x to the power of y</li>
+                <li>log is base 10, ln is natural logarithm</li>
+                <li>
+                  Memory functions: MS (store), MR (recall), M+ (add), M-
+                  (subtract), MC (clear)
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 class="font-medium text-gray-800 dark:text-white mb-2">
+                Programmer Calculator
+              </h4>
+              <ul
+                class="list-disc pl-5 text-sm text-gray-700 dark:text-gray-300 space-y-1"
+              >
+                <li>Select number base (HEX, DEC, OCT, BIN)</li>
+                <li>Bitwise operations: AND, OR, XOR, NOT</li>
+                <li>Bit shifts: << (left), >> (right)</li>
+                <li>Hexadecimal values use A-F buttons</li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 class="font-medium text-gray-800 dark:text-white mb-2">
+                Keyboard Shortcuts
+              </h4>
+              <ul
+                class="list-disc pl-5 text-sm text-gray-700 dark:text-gray-300 space-y-1"
+              >
+                <li>Numbers 0-9: Input digits</li>
+                <li>+ - * /: Basic operations</li>
+                <li>Enter: Calculate (=)</li>
+                <li>Escape: Clear (C)</li>
+                <li>Delete: Clear All (AC)</li>
+                <li>m: Toggle memory panel</li>
+                <li>h: Toggle history panel</li>
+                <li>t: Toggle theme</li>
+              </ul>
+            </div>
+
+            <div
+              class="sticky bottom-0 bg-white dark:bg-gray-800 p-3 border-t border-gray-200/50 dark:border-gray-700/50"
+            >
+              <p class="text-sm text-gray-600 dark:text-gray-400">
+                OmniCalc v1.0 - A comprehensive calculator for all your needs
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Watermark -->
+    <div class="fixed bottom-4 right-5 z-50">
+      <div
+        class="watermark flex glass-card px-4 py-2 rounded-full shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl animate-pop-up items-center"
+      >
+        <p
+          class="text-sm font-medium text-gray-800 dark:text-gray-200 flex items-center space-x-1"
+        >
+          Build By
+          <a
+            href="https://github.com/Bhavu7"
+            class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 flex items-center"
+            aria-label="Visit Bhavesh Bhoi's GitHub profile"
+            ><i class="fab fa-github mr-1 ml-2"></i>Bhavesh Bhoi</a
+          >
+        </p>
+        <button
+          class="watermark-close ml-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 sm:hidden focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-full p-1"
+          aria-label="Close watermark"
+        >
+          <i class="fas fa-times text-xs"></i>
+        </button>
+      </div>
+      <div
+        class="watermark-restore hidden glass-card p-2 rounded-full shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl animate-pop-up"
+      >
+        <button
+          class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-full"
+          aria-label="Restore watermark"
+        >
+          <i class="fab fa-github text-sm"></i>
+        </button>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjs@10.6.0/lib/browser/math.min.js"></script>
+
+    <!-- Watermark Background Gradient Animation -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const watermark = document.querySelector(".watermark");
+
+        // Function to generate a random RGB color
+        function getRandomColor(opacity = 0.2) {
+          const r = Math.floor(Math.random() * 256);
+          const g = Math.floor(Math.random() * 256);
+          const b = Math.floor(Math.random() * 256);
+          return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+        }
+
+        // Function to update gradient
+        function updateGradient() {
+          const color1 = getRandomColor(0.2);
+          const color2 = getRandomColor(0.2);
+          const gradient = `linear-gradient(135deg, ${color1}, ${color2})`;
+          watermark.style.setProperty("--gradient", gradient);
+        }
+
+        // Initial gradient
+        updateGradient();
+
+        // Update gradient every 5 seconds (matches CSS animation duration)
+        setInterval(updateGradient, 5000);
+
+        // Fallback for low-performance devices
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          watermark.style.backdropFilter = "none";
+          watermark.style.webkitBackdropFilter = "none";
+          watermark.style.background = "rgba(79, 70, 229, 0.4)"; // Fallback solid color
+        }
+      });
+
+      // Watermark Restore Functionality
+      document.addEventListener("DOMContentLoaded", () => {
+        const watermark = document.querySelector(".watermark");
+        const watermarkRestore = document.querySelector(".watermark-restore");
+        const closeButton = document.querySelector(".watermark-close");
+        const restoreButton = document.querySelector(
+          ".watermark-restore button"
+        );
+
+        // Function to generate a random RGB color
+        function getRandomColor(opacity = 0.2) {
+          const r = Math.floor(Math.random() * 256);
+          const g = Math.floor(Math.random() * 256);
+          const b = Math.floor(Math.random() * 256);
+          return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+        }
+
+        // Function to update gradient
+        function updateGradient() {
+          const color1 = getRandomColor(0.2);
+          const color2 = getRandomColor(0.2);
+          const gradient = `linear-gradient(135deg, ${color1}, ${color2})`;
+          watermark.style.setProperty("--gradient", gradient);
+          watermarkRestore.style.setProperty("--gradient", gradient); // Apply to restore icon
+        }
+
+        // Initial gradient
+        updateGradient();
+
+        // Update gradient every 5 seconds
+        setInterval(updateGradient, 5000);
+
+        // Close watermark
+        closeButton.addEventListener("click", () => {
+          watermark.style.display = "none"; // Hide watermark
+          // watermarkRestore.classList.remove("hidden"); // Show restore button
+        });
+
+        // Restore watermark
+        restoreButton.addEventListener("click", () => {
+          watermark.classList.remove("hidden");
+          watermarkRestore.classList.add("hidden");
+        });
+
+        // Fallback for low-performance devices
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          watermark.style.backdropFilter = "none";
+          watermark.style.webkitBackdropFilter = "none";
+          watermark.style.background = "rgba(79, 70, 229, 0.4)";
+          watermarkRestore.style.backdropFilter = "none";
+          watermarkRestore.style.webkitBackdropFilter = "none";
+          watermarkRestore.style.background = "rgba(79, 70, 229, 0.4)";
+        }
+      });
+    </script>
+  </body>
+</html>
